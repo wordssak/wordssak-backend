@@ -1,0 +1,103 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+*.iws
+
+# Build and output directories
+/out/
+build/
+target/
+
+# Maven specific files
+*.log
+*.class
+*.jar
+*.war
+*.ear
+*.pyc
+*.pyo
+*.rbc
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.dylib
+*.lib
+*.js.map
+*.log
+
+# Gradle specific files
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+*.sml
+*.swo
+*.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Ignore any properties files in all folders
+*.properties
+
+# JetBrains IDEs
+.idea/
+*.iml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/dictionaries
+.idea/libraries
+.idea/shelf
+.idea/inspectionProfiles
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Java project settings
+.settings/
+.classpath
+.project
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE-specific files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.vscode/
+
+# Temporary files
+*.log
+*.lock
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.pid
+*.seed
+*.pid.lock
+*.gz
