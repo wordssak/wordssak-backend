@@ -34,4 +34,8 @@ public class Teacher extends BaseEntity {
     public static Teacher from(SignUpForm signUpForm) {
         return new Teacher(signUpForm.getEmail(), signUpForm.getPassword(), signUpForm.getName());
     }
+
+    public boolean validatePassword(String password) {
+        return this.password.equals(password);
+    }
 }
