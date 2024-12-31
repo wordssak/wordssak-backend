@@ -23,7 +23,22 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public void saveSchoolsFromCsv(String filePath) {
         List<String> schoolNames = CsvReader.readCsv(filePath);
+        schoolNames.remove(0);
         List<School> schools = schoolNames.stream().map(School::of).collect(Collectors.toList());
         schoolRepository.saveAll(schools);
+    }
+
+    @Override
+    @Transactional(readOnly = true, isolation = READ_UNCOMMITTED, timeout = 20)
+    public List<String> getThreeSchoolNames(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return schoolRepository.findTop3ByNameStartingWithOrderByNameAsc("").stream()
+                    .map(School::getName)
+                    .collect(Collectors.toList());
+        }
+
+        return schoolRepository.findTop3ByNameStartingWithOrderByNameAsc(keyword).stream()
+                .map(School::getName)
+                .collect(Collectors.toList());
     }
 }
