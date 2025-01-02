@@ -8,9 +8,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.springframework.transaction.annotation.Isolation.READ_UNCOMMITTED;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(isolation = READ_UNCOMMITTED, timeout = 20)
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
@@ -33,5 +37,12 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+    }
+
+    @Override
+    @Transactional(readOnly = true, isolation = READ_UNCOMMITTED, timeout = 15)
+    public Teacher getTeacher(String email) {
+        return teacherRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다."));
     }
 }
