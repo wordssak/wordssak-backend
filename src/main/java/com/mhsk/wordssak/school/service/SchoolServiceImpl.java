@@ -3,6 +3,7 @@ package com.mhsk.wordssak.school.service;
 import com.mhsk.wordssak.common.csv.CsvReader;
 import com.mhsk.wordssak.school.entity.School;
 import com.mhsk.wordssak.school.repository.SchoolRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +13,10 @@ import java.util.stream.Collectors;
 import static org.springframework.transaction.annotation.Isolation.READ_UNCOMMITTED;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(isolation = READ_UNCOMMITTED, timeout = 60)
 public class SchoolServiceImpl implements SchoolService {
     private final SchoolRepository schoolRepository;
-
-    public SchoolServiceImpl(SchoolRepository schoolRepository) {
-        this.schoolRepository = schoolRepository;
-    }
 
     @Override
     public void saveSchoolsFromCsv(String filePath) {
