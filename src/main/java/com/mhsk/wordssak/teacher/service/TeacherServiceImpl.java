@@ -40,7 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    @Transactional(readOnly = true, isolation = READ_UNCOMMITTED, timeout = 15)
+    @Transactional(isolation = READ_UNCOMMITTED, readOnly = true, timeout = 15)
     public Teacher getTeacher(String email) {
         return teacherRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다."));

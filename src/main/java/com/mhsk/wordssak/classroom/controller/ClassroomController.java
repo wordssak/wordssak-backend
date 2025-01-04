@@ -1,29 +1,38 @@
 package com.mhsk.wordssak.classroom.controller;
 
+import com.mhsk.wordssak.classroom.dto.GetClassroomResponse;
 import com.mhsk.wordssak.classroom.dto.RegisterClassInfoRequest;
-import com.mhsk.wordssak.classroom.service.ClassService;
+import com.mhsk.wordssak.classroom.entity.Classroom;
+import com.mhsk.wordssak.classroom.service.ClassroomService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/classrooms")
 @RequiredArgsConstructor
 public class ClassroomController {
-    private final ClassService classService;
+    private final ClassroomService classroomService;
 
     @PostMapping()
     public ResponseEntity<Void> registerClassInfo(
             @RequestBody RegisterClassInfoRequest registerClassInfoRequest, HttpSession session
     ) {
-        classService.register(session.getAttribute("email").toString(), registerClassInfoRequest);
+        classroomService.register(session.getAttribute("email").toString(), registerClassInfoRequest);
 
         return ResponseEntity.status(CREATED).build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<GetClassroomResponse> getClassInfo(
+            @RequestParam String classCode, HttpSession session
+    ) {
+        Classroom classroom = classroomService.getClassroom(classCode);
+
+        return ResponseEntity.status(OK).body(GetClassroomResponse.from(classroom));
     }
 }

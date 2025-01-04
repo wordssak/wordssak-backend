@@ -6,6 +6,7 @@ import com.mhsk.wordssak.classroom.repository.ClassRepository;
 import com.mhsk.wordssak.classroom.util.CodeGenerator;
 import com.mhsk.wordssak.teacher.entity.Teacher;
 import com.mhsk.wordssak.teacher.service.TeacherService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,26 @@ import static org.springframework.transaction.annotation.Isolation.READ_UNCOMMIT
 @Service
 @RequiredArgsConstructor
 @Transactional(isolation = READ_UNCOMMITTED, timeout = 60)
-public class ClassServiceImpl implements ClassService {
-    private final ClassRepository classroomRepository;
+public class ClassroomServiceImpl implements ClassroomService {
     private final TeacherService teacherService;
+    private final ClassRepository classroomRepository;
 
     @Override
     public void register(String email, RegisterClassInfoRequest registerClassInfoRequest) {
         Teacher teacher = teacherService.getTeacher(email);
         List<Classroom> existentClassrooms = classroomRepository.findByTeacher(teacher);
-        for (Classroom classroom : existentClassrooms) {
-            validateDuplication(classroom, registerClassInfoRequest);
-        }
+        existentClassrooms.stream()
+                .forEach(classroom -> validateDuplication(classroom, registerClassInfoRequest));
 
         String classCode = CodeGenerator.generate();
         classroomRepository.save(Classroom.from(teacher, registerClassInfoRequest, classCode));
+    }
+
+    @Override
+    @Transactional(isolation = READ_UNCOMMITTED, readOnly = true, timeout = 30)
+    public Classroom getClassroom(String classCode) {
+        return classroomRepository.findByClassCode(classCode)
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 클래스룸을 찾을 수 없습니다."));
     }
 
     private void validateDuplication(Classroom classroom, RegisterClassInfoRequest registerClassInfoRequest) {
