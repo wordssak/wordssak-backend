@@ -4,7 +4,11 @@ import com.mhsk.wordssak.common.entity.BaseEntity;
 import com.mhsk.wordssak.student.entity.Student;
 import com.mhsk.wordssak.wordbook.entity.WordBook;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class StudyResult extends BaseEntity {
 
@@ -22,6 +26,10 @@ public class StudyResult extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   private Satisfaction satisfaction;
+
+  private int memorizedCount;
+
+  private int notMemorizedCount;
 
   private Boolean isCompleted;
 
