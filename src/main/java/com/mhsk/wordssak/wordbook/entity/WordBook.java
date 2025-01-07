@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,7 +30,7 @@ public class WordBook extends BaseEntity {
   private Integer unit;
 
   @OneToMany(mappedBy = "wordBook", cascade = CascadeType.ALL)
-  private List<Word> words;
+  private List<Word> words = new ArrayList<>();
 
   public WordBook(Integer grade, Integer semester, Integer unit) {
     this.grade = grade;

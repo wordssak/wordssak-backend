@@ -3,7 +3,9 @@ package com.mhsk.wordssak.student.entity;
 import com.mhsk.wordssak.classroom.entity.Classroom;
 import com.mhsk.wordssak.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Student extends BaseEntity {
 
