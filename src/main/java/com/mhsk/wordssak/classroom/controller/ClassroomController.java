@@ -30,10 +30,9 @@ public class ClassroomController {
     }
 
     @GetMapping()
-    public ResponseEntity<GetClassroomResponse> getClassInfo(
-            @RequestParam String classCode, HttpSession session
-    ) {
+    public ResponseEntity<GetClassroomResponse> getClassInfo(@RequestParam String classCode, HttpSession session) {
         Classroom classroom = classroomService.getClassroom(classCode);
+        session.setAttribute("classCode", classroom.getClassCode());
 
         return ResponseEntity.status(OK).body(GetClassroomResponse.from(classroom));
     }
