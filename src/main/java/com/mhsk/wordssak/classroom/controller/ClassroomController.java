@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -33,5 +35,11 @@ public class ClassroomController {
         session.setAttribute("classCode", classroom.getClassCode());
 
         return ResponseEntity.status(OK).body(GetClassroomResponse.from(classroom));
+    }
+
+    @GetMapping("/list/{teacherId}")
+    public ResponseEntity<List<Classroom>> getClassroomsByTeacher(@PathVariable Long teacherId) {
+        List<Classroom> classrooms = classroomService.getClassroomsByTeacherId(teacherId);
+        return ResponseEntity.ok(classrooms);
     }
 }

@@ -22,4 +22,6 @@ public class ClassWordBook extends BaseEntity {
 
   private String reward;
 
+  private boolean activeStatus;
+
 }

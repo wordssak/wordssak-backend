@@ -52,4 +52,8 @@ public class ClassroomServiceImpl implements ClassroomService {
 
         throw new DataIntegrityViolationException("이미 등록된 클래스입니다. 기존 단어장을 수정해 주세요.");
     }
+
+    public List<Classroom> getClassroomsByTeacherId(Long teacherId) {
+        return classroomRepository.findByTeacherId(teacherId);
+    }
 }

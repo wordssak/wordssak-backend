@@ -5,9 +5,10 @@ import com.mhsk.wordssak.common.entity.BaseEntity;
 import com.mhsk.wordssak.student.dto.SignInForm;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
-
 import static lombok.AccessLevel.PROTECTED;
+import lombok.Getter;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class Student extends BaseEntity {
