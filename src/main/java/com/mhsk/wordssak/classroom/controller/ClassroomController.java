@@ -42,4 +42,12 @@ public class ClassroomController {
         List<Classroom> classrooms = classroomService.getClassroomsByTeacherId(teacherId);
         return ResponseEntity.ok(classrooms);
     }
+
+    @GetMapping()
+    public ResponseEntity<List<GetClassroomResponse>> getClassrooms(HttpSession session) {
+        String email = (String) session.getAttribute("email");
+        List<Classroom> classrooms = classroomService.getClassroomsByEmail(email);
+
+        return ResponseEntity.status(OK).body(classrooms.stream().map(GetClassroomResponse::from).toList());
+    }
 }
