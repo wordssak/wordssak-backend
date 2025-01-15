@@ -35,6 +35,14 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
+    public Classroom getClassroom(Long id) {
+        return classroomRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(
+                        "해당하는 클래스룸을 찾을 수 없습니다. 전송된 ID: %s", id))
+                );
+    }
+
+    @Override
     @Transactional(isolation = READ_UNCOMMITTED, readOnly = true, timeout = 30)
     public Classroom getClassroom(String classCode) {
         return classroomRepository.findByClassCode(classCode)
