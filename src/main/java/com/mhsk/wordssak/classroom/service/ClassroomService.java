@@ -10,6 +10,8 @@ import java.util.List;
 public interface ClassroomService {
     void register(String email, RegisterClassInfoRequest registerClassInfoRequest);
 
+    Classroom getClassroom(Long id);
+
     Classroom getClassroom(String classCode);
 
     List<Classroom> getClassroomsByTeacherId(Long teacherId);
