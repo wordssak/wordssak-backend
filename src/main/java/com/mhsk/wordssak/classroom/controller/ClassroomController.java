@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/classrooms")
@@ -29,7 +28,7 @@ public class ClassroomController {
         return ResponseEntity.status(CREATED).build();
     }
 
-    @GetMapping()
+    @GetMapping("/info")
     public ResponseEntity<GetClassroomResponse> getClassInfo(@RequestParam String classCode, HttpSession session) {
         Classroom classroom = classroomService.getClassroom(classCode);
         session.setAttribute("classCode", classroom.getClassCode());
@@ -49,5 +48,11 @@ public class ClassroomController {
         List<Classroom> classrooms = classroomService.getClassroomsByEmail(email);
 
         return ResponseEntity.status(OK).body(classrooms.stream().map(GetClassroomResponse::from).toList());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClassroom(@PathVariable String id) {
+        classroomService.delete(id);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }

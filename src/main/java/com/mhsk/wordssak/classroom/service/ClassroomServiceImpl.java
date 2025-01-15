@@ -58,6 +58,17 @@ public class ClassroomServiceImpl implements ClassroomService {
         return classroomRepository.findByTeacherOrderByGradeAscClassNumber(teacherService.getTeacher(email));
     }
 
+    @Override
+    public void delete(String id) {
+        Long parsedId = Long.parseLong(id);
+        if (classroomRepository.existsById(parsedId)) {
+            classroomRepository.deleteById(parsedId);
+            return;
+        }
+
+        throw new EntityNotFoundException(String.format("해당하는 클래스를 찾을 수 없습니다. 전송된 ID: %s", id));
+    }
+
     public List<Classroom> getClassroomsByTeacherId(Long teacherId) {
         return classroomRepository.findByTeacherId(teacherId);
     }
