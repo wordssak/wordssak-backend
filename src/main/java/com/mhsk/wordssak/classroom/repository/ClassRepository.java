@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClassRepository extends JpaRepository<Classroom, Long> {
-    List<Classroom> findByTeacher(Teacher teacher);
-
     Optional<Classroom> findByClassCode(String classCode);
 
     List<Classroom> findByTeacherId(Long teacherId);
 
+    List<Classroom> findByTeacherOrderByGradeAscClassNumber(Teacher teacher);
 }

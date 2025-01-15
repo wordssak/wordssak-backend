@@ -26,7 +26,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     @Override
     public void register(String email, RegisterClassInfoRequest registerClassInfoRequest) {
         Teacher teacher = teacherService.getTeacher(email);
-        List<Classroom> existentClassrooms = classroomRepository.findByTeacher(teacher);
+        List<Classroom> existentClassrooms = getClassroomsByTeacherId(teacher.getId());
         existentClassrooms.stream()
                 .forEach(classroom -> validateDuplication(classroom, registerClassInfoRequest));
 
@@ -45,12 +45,17 @@ public class ClassroomServiceImpl implements ClassroomService {
         if (
                 !classroom.getClassNumber().toString().equals(registerClassInfoRequest.getClassNumber())
                         || !classroom.getGrade().toString().equals(registerClassInfoRequest.getGrade())
-                        || !classroom.getSchool().equals(registerClassInfoRequest.getSchoolName())
         ) {
             return;
         }
 
         throw new DataIntegrityViolationException("이미 등록된 클래스입니다. 기존 단어장을 수정해 주세요.");
+    }
+
+    @Override
+    @Transactional(isolation = READ_UNCOMMITTED, readOnly = true, timeout = 20)
+    public List<Classroom> getClassroomsByEmail(String email) {
+        return classroomRepository.findByTeacherOrderByGradeAscClassNumber(teacherService.getTeacher(email));
     }
 
     public List<Classroom> getClassroomsByTeacherId(Long teacherId) {
