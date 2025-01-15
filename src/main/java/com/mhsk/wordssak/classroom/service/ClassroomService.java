@@ -13,4 +13,6 @@ public interface ClassroomService {
     Classroom getClassroom(String classCode);
 
     List<Classroom> getClassroomsByTeacherId(Long teacherId);
+
+    List<Classroom> getClassroomsByEmail(String email);
 }
