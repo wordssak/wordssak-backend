@@ -15,4 +15,6 @@ public interface ClassroomService {
     List<Classroom> getClassroomsByTeacherId(Long teacherId);
 
     List<Classroom> getClassroomsByEmail(String email);
+
+    void delete(String id);
 }
