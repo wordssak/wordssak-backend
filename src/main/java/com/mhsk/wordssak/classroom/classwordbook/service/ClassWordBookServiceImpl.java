@@ -1,5 +1,6 @@
 package com.mhsk.wordssak.classroom.classwordbook.service;
 
+import com.mhsk.wordssak.classroom.classwordbook.dto.ActiveStatusResponse;
 import com.mhsk.wordssak.classroom.classwordbook.dto.RegisterClassWordBookRequest;
 import com.mhsk.wordssak.classroom.classwordbook.entity.ClassWordBook;
 import com.mhsk.wordssak.classroom.classwordbook.repository.ClassWordBookRepository;
@@ -36,5 +37,23 @@ public class ClassWordBookServiceImpl implements ClassWordBookService {
 
         ClassWordBook classWordBook = ClassWordBook.from(classroom, wordBook, registerClassWordBookRequest);
         classWordBookRepository.save(classWordBook);
+    }
+
+    @Transactional(readOnly = true)
+    public ActiveStatusResponse getActiveStatusByClassCode(String classCode) {
+        ClassWordBook classWordBook = classWordBookRepository
+                .findTopByClassroomClassCodeOrderByCreatedAtDesc(classCode)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 클래스 코드입니다."));
+        return new ActiveStatusResponse(classWordBook.isActiveStatus());
+    }
+
+    @Transactional
+    public ActiveStatusResponse toggleActiveStatus(String classCode) {
+        ClassWordBook classWordBook = classWordBookRepository.findTopByClassroomClassCodeOrderByCreatedAtDesc(classCode)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 클래스 코드입니다."));
+        boolean newStatus = !classWordBook.isActiveStatus();
+        classWordBook.setActiveStatus(newStatus);
+        classWordBookRepository.save(classWordBook);
+        return new ActiveStatusResponse(newStatus);
     }
 }

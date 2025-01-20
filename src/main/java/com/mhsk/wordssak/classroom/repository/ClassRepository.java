@@ -13,4 +13,6 @@ public interface ClassRepository extends JpaRepository<Classroom, Long> {
     List<Classroom> findByTeacherId(Long teacherId);
 
     List<Classroom> findByTeacherOrderByGradeAscClassNumber(Teacher teacher);
+
+
 }

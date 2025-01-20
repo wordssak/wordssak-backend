@@ -5,10 +5,14 @@ import com.mhsk.wordssak.classroom.entity.Classroom;
 import com.mhsk.wordssak.common.entity.BaseEntity;
 import com.mhsk.wordssak.wordbook.entity.WordBook;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static lombok.AccessLevel.PROTECTED;
 
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class ClassWordBook extends BaseEntity {
@@ -28,7 +32,8 @@ public class ClassWordBook extends BaseEntity {
 
     private boolean activeStatus;
 
-    private ClassWordBook(Classroom classroom, WordBook wordBook, String reward, boolean activeStatus) {
+
+    public ClassWordBook(Classroom classroom, WordBook wordBook, String reward, boolean activeStatus) {
         this.classroom = classroom;
         this.wordBook = wordBook;
         this.reward = reward;

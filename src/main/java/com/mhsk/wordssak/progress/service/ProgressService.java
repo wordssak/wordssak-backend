@@ -2,22 +2,34 @@ package com.mhsk.wordssak.progress.service;
 
 import com.mhsk.wordssak.progress.repository.ProgressRepository;
 import com.mhsk.wordssak.progress.response.WordProgressResponse;
+import com.mhsk.wordssak.progress.response.WordProgressResponseWithStatus;
+import com.mhsk.wordssak.studyresult.repository.StudyResultRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class ProgressService {
 
   private final ProgressRepository progressRepository;
+  private final StudyResultRepository studyResultRepository;
 
-  public ProgressService(ProgressRepository progressRepository) {
+  public ProgressService(ProgressRepository progressRepository, StudyResultRepository studyResultRepository) {
     this.progressRepository = progressRepository;
+    this.studyResultRepository = studyResultRepository;
   }
 
-  public List<WordProgressResponse> getWordProgressByStudentId(Long studentId) {
-    return progressRepository.findLatestWordProgressByStudentId(studentId)
+  public WordProgressResponseWithStatus getWordProgressWithStatusByStudentId(Long studentId) {
+    boolean activeStatus = progressRepository.isActiveClassWordBookByStudentId(studentId);
+
+    Long activeWordBookId = progressRepository.findActiveWordBookIdByStudentId(studentId);
+    boolean satisfactionCompleted = activeWordBookId != null &&
+            studyResultRepository.isSatisfactionCompletedForWordBook(studentId, activeWordBookId);
+
+    List<WordProgressResponse> wordList = activeStatus
+            ? progressRepository.findLatestWordProgressByStudentIdWithActiveStatus(studentId)
             .stream()
             .map(row -> new WordProgressResponse(
                     ((Number) row[0]).longValue(),
@@ -26,8 +38,12 @@ public class ProgressService {
                     (String) row[3],
                     ((Number) row[4]).intValue()
             ))
-            .toList();
+            .toList()
+            : List.of();
+
+    return new WordProgressResponseWithStatus(activeStatus, satisfactionCompleted, wordList);
   }
+
 
   @Transactional
   public void increaseStudyCount(Long wordId, Long studentId) {

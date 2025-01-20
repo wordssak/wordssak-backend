@@ -1,6 +1,5 @@
 package com.mhsk.wordssak.progress.repository;
 
-import com.mhsk.wordssak.progress.entity.Progress;
 import com.mhsk.wordssak.word.entity.Word;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,9 +24,18 @@ public interface ProgressRepository extends JpaRepository<Word, Long> {
         FROM Student 
         WHERE id = :studentId
     )
+    AND cwb.active_status = true
     ORDER BY cwb.created_at DESC
-""", nativeQuery = true)
-  List<Object[]> findLatestWordProgressByStudentId(@Param("studentId") Long studentId);
+  """, nativeQuery = true)
+  List<Object[]> findLatestWordProgressByStudentIdWithActiveStatus(@Param("studentId") Long studentId);
+
+  @Query(value = """
+    SELECT CASE WHEN COUNT(cwb.id) > 0 THEN true ELSE false END
+    FROM Class_Word_Book cwb
+    JOIN Student s ON cwb.classroom_id = s.classroom_id
+    WHERE s.id = :studentId AND cwb.active_status = true
+  """, nativeQuery = true)
+  boolean isActiveClassWordBookByStudentId(@Param("studentId") Long studentId);
 
   @Modifying
   @Query(value = """
@@ -39,7 +47,17 @@ public interface ProgressRepository extends JpaRepository<Word, Long> {
     WHEN NOT MATCHED THEN
         INSERT (student_id, word_id, study_count, created_at)
         VALUES (:studentId, :wordId, 1, CURRENT_TIMESTAMP)
-""", nativeQuery = true)
+  """, nativeQuery = true)
   void increaseStudyCount(@Param("wordId") Long wordId, @Param("studentId") Long studentId);
 
+  @Query(value = """
+    SELECT cwb.wordbook_id
+    FROM Class_Word_Book cwb
+    JOIN classroom c ON c.id = cwb.classroom_id
+    JOIN student s ON s.classroom_id = c.id
+    WHERE s.id = :studentId
+      AND cwb.active_status = true
+    LIMIT 1
+  """, nativeQuery = true)
+  Long findActiveWordBookIdByStudentId(@Param("studentId") Long studentId);
 }

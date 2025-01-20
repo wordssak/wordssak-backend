@@ -1,12 +1,10 @@
 package com.mhsk.wordssak.progress.controller;
 
-import com.mhsk.wordssak.progress.entity.Progress;
-import com.mhsk.wordssak.progress.response.WordProgressResponse;
+import com.mhsk.wordssak.progress.response.WordProgressResponseWithStatus;
 import com.mhsk.wordssak.progress.service.ProgressService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/progress")
@@ -19,9 +17,9 @@ public class ProgressController {
   }
 
   @GetMapping("/words/{studentId}")
-  public ResponseEntity<List<WordProgressResponse>> getWordsByStudent(@PathVariable Long studentId) {
-    List<WordProgressResponse> wordList = progressService.getWordProgressByStudentId(studentId);
-    return ResponseEntity.ok(wordList);
+  public ResponseEntity<WordProgressResponseWithStatus> getWordsByStudent(@PathVariable Long studentId) {
+    WordProgressResponseWithStatus response = progressService.getWordProgressWithStatusByStudentId(studentId);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/study/{wordId}/{studentId}")
