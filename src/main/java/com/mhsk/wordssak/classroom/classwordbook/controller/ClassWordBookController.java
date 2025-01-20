@@ -1,13 +1,11 @@
 package com.mhsk.wordssak.classroom.classwordbook.controller;
 
+import com.mhsk.wordssak.classroom.classwordbook.dto.ActiveStatusResponse;
 import com.mhsk.wordssak.classroom.classwordbook.dto.RegisterClassWordBookRequest;
 import com.mhsk.wordssak.classroom.classwordbook.service.ClassWordBookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -23,5 +21,15 @@ public class ClassWordBookController {
         classWordBookService.registerClassWordBook(registerClassWordBookRequest);
 
         return ResponseEntity.status(CREATED).build();
+    }
+
+    @GetMapping("/status/{classCode}")
+    public ActiveStatusResponse getActiveStatus(@PathVariable String classCode) {
+        return classWordBookService.getActiveStatusByClassCode(classCode);
+    }
+
+    @PostMapping("/toggle/{classCode}")
+    public ActiveStatusResponse toggleActiveStatus(@PathVariable String classCode) {
+        return classWordBookService.toggleActiveStatus(classCode);
     }
 }

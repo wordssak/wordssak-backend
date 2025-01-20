@@ -10,9 +10,11 @@ import java.util.List;
 @Setter
 public class EnrollWordBookRequest {
 
-  Integer grade;
-  Integer semester;
-  Integer unit;
+  private Integer grade;
+  private Integer semester;
+  private Integer unit;
+  private String classCode;
+  private String reward;
   private List<WordRequest> words;
 
 }
