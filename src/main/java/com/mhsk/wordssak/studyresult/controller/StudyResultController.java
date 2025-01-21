@@ -1,6 +1,7 @@
 package com.mhsk.wordssak.studyresult.controller;
 
 import com.mhsk.wordssak.studyresult.dto.request.StudyResultRequest;
+import com.mhsk.wordssak.studyresult.dto.response.StudyProgressResponse;
 import com.mhsk.wordssak.studyresult.dto.response.StudyResultResponse;
 import com.mhsk.wordssak.studyresult.service.StudyResultService;
 import lombok.RequiredArgsConstructor;
@@ -29,4 +30,9 @@ public class StudyResultController {
     return ResponseEntity.ok(result);
   }
 
+  @GetMapping("/classroom/{classroomCode}/progress")
+  public ResponseEntity<List<StudyProgressResponse>> getClassroomProgress(@PathVariable String classroomCode) {
+    List<StudyProgressResponse> progress = studyResultService.getClassroomProgress(classroomCode);
+    return ResponseEntity.ok(progress);
+  }
 }
