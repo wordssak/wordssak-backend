@@ -28,12 +28,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public String login(SignInForm signInForm) {
+    public Long login(SignInForm signInForm) {
         Teacher teacher = teacherRepository.findByEmail(signInForm.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다."));
 
         if (teacher.validatePassword(signInForm.getPassword())) {
-            return teacher.getName();
+            return teacher.getId();
         }
 
         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");

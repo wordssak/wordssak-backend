@@ -26,4 +26,20 @@ public interface StudyResultRepository extends JpaRepository<StudyResult, Long> 
 
   Optional<StudyResult> findFirstByStudentIdOrderByCreatedAtDesc(Long studentId);
 
+  @Query("""
+    SELECT sr 
+    FROM StudyResult sr 
+    WHERE sr.student.id = :studentId 
+    AND sr.wordBook.id = :wordBookId
+""")
+  Optional<StudyResult> findByStudentIdAndWordBookId(@Param("studentId") Long studentId, @Param("wordBookId") Long wordBookId);
+
+  @Query(value = """
+    SELECT sr.wordbook_id
+    FROM study_result sr
+    WHERE sr.student_id = :studentId
+    ORDER BY sr.created_at DESC
+    LIMIT 1
+""", nativeQuery = true)
+  Long findLatestWordBookIdByStudentId(@Param("studentId") Long studentId);
 }

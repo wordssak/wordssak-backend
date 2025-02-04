@@ -16,15 +16,19 @@ public class ProgressController {
     this.progressService = progressService;
   }
 
-  @GetMapping("/words/{studentId}")
-  public ResponseEntity<WordProgressResponseWithStatus> getWordsByStudent(@PathVariable Long studentId) {
+  @GetMapping("/words")
+  public ResponseEntity<WordProgressResponseWithStatus> getWordsByStudent(
+          @SessionAttribute("studentId") Long studentId) {
     WordProgressResponseWithStatus response = progressService.getWordProgressWithStatusByStudentId(studentId);
     return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/study/{wordId}/{studentId}")
-  public ResponseEntity<Void> increaseStudyCount(@PathVariable Long wordId, @PathVariable Long studentId) {
+  @PostMapping("/study/{wordId}")
+  public ResponseEntity<Void> increaseStudyCount(
+          @PathVariable Long wordId,
+          @SessionAttribute("studentId") Long studentId) {
     progressService.increaseStudyCount(wordId, studentId);
     return ResponseEntity.ok().build();
   }
+
 }

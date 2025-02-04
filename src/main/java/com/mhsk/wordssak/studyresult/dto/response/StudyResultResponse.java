@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyResultResponse {
-
   private String studentName;
   private int memorizedCount;
   private int totalCount;

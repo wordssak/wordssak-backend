@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProgressRepository extends JpaRepository<Word, Long> {
@@ -60,4 +61,50 @@ public interface ProgressRepository extends JpaRepository<Word, Long> {
     LIMIT 1
   """, nativeQuery = true)
   Long findActiveWordBookIdByStudentId(@Param("studentId") Long studentId);
+
+  @Query(value = """
+    SELECT cwb.wordbook_id
+    FROM Class_Word_Book cwb
+    JOIN Student s ON cwb.classroom_id = s.classroom_id
+    WHERE s.id = :studentId
+    ORDER BY cwb.created_at DESC
+    LIMIT 1
+""", nativeQuery = true)
+  Long findLatestWordBookIdByStudentId(@Param("studentId") Long studentId);
+
+  @Query(value = """
+    SELECT CASE WHEN COUNT(cwb.id) > 0 THEN true ELSE false END
+    FROM Class_Word_Book cwb
+    WHERE cwb.wordbook_id = :wordBookId AND cwb.active_status = true
+""", nativeQuery = true)
+  boolean isActiveWordBook(@Param("wordBookId") Long wordBookId);
+
+  @Query(value = """
+    SELECT cwb.wordbook_id
+    FROM Class_Word_Book cwb
+    JOIN Student s ON cwb.classroom_id = s.classroom_id
+    WHERE s.id = :studentId AND cwb.active_status = false
+    ORDER BY cwb.created_at DESC
+    LIMIT 1
+""", nativeQuery = true)
+  Long findLatestInactiveWordBookIdByStudentId(@Param("studentId") Long studentId);
+
+  @Query(value = """
+    SELECT cwb.wordbook_id
+    FROM Class_Word_Book cwb
+    WHERE cwb.classroom_id = :classroomId AND cwb.active_status = false
+    ORDER BY cwb.created_at DESC
+    LIMIT 1
+""", nativeQuery = true)
+  Long findLatestInactiveWordBookIdByClassroomId(@Param("classroomId") Long classroomId);
+
+  @Query(value = """
+    SELECT COUNT(*) FROM Word w WHERE w.wordbook_id = :wordBookId
+""", nativeQuery = true)
+  int countTotalWordsByWordBookId(@Param("wordBookId") Long wordBookId);
+
+
+  @Query("SELECT wb.grade, wb.semester, wb.title FROM WordBook wb WHERE wb.id = :wordBookId")
+  Optional<Object[]> findWordBookInfoById(@Param("wordBookId") Long wordBookId);
+
 }

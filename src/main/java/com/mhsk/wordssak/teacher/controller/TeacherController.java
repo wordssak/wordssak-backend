@@ -5,11 +5,15 @@ import com.mhsk.wordssak.teacher.dto.SignUpForm;
 import com.mhsk.wordssak.teacher.service.TeacherService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -29,10 +33,13 @@ public class TeacherController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> signIn(@RequestBody SignInForm signInForm, HttpSession session) {
-        String name = teacherService.login(signInForm);
+    public ResponseEntity<Map<String, Long>> signIn(@RequestBody SignInForm signInForm, HttpSession session) {
+        Long teacherId = teacherService.login(signInForm);
         session.setAttribute("email", signInForm.getEmail());
 
-        return ResponseEntity.status(OK).body(name);
+        Map<String, Long> response = new HashMap<>();
+        response.put("teacherId", teacherId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

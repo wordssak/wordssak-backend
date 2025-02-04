@@ -19,12 +19,20 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
 
     @Override
-    public void login(SignInForm signInForm, String classCode) {
+    public Long login(SignInForm signInForm, String classCode) {
         Classroom classroom = classroomService.getClassroom(classCode);
-        if (studentRepository.existsByClassroomAndNameAndBirth(classroom, signInForm.getName(), signInForm.getBirth())) {
-            return;
+
+        Student existingStudent = studentRepository.findByClassroomAndNameAndBirth(
+                classroom,
+                signInForm.getName(),
+                signInForm.getBirth()
+        );
+
+        if (existingStudent != null) {
+            return existingStudent.getId();
         }
 
-        studentRepository.save(Student.from(signInForm, classroom));
+        Student newStudent = studentRepository.save(Student.from(signInForm, classroom));
+        return newStudent.getId();
     }
 }

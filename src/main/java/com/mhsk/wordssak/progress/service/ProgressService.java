@@ -25,9 +25,20 @@ public class ProgressService {
     boolean activeStatus = progressRepository.isActiveClassWordBookByStudentId(studentId);
 
     Long activeWordBookId = progressRepository.findActiveWordBookIdByStudentId(studentId);
-    boolean satisfactionCompleted = activeWordBookId != null &&
-            studyResultRepository.isSatisfactionCompletedForWordBook(studentId, activeWordBookId);
 
+    Long latestInactiveWordBookId = progressRepository.findLatestInactiveWordBookIdByStudentId(studentId);
+
+    Long lastSubmittedWordBookId = studyResultRepository.findLatestWordBookIdByStudentId(studentId);
+
+    boolean isNewWordBookRegistered = activeWordBookId != null &&
+            (lastSubmittedWordBookId == null || !lastSubmittedWordBookId.equals(activeWordBookId));
+
+    boolean satisfactionCompleted = !isNewWordBookRegistered &&
+            latestInactiveWordBookId != null &&
+            latestInactiveWordBookId.equals(lastSubmittedWordBookId) &&
+            studyResultRepository.isSatisfactionCompletedForWordBook(studentId, latestInactiveWordBookId);
+
+    // 단어 학습 리스트 조회
     List<WordProgressResponse> wordList = activeStatus
             ? progressRepository.findLatestWordProgressByStudentIdWithActiveStatus(studentId)
             .stream()
@@ -43,7 +54,6 @@ public class ProgressService {
 
     return new WordProgressResponseWithStatus(activeStatus, satisfactionCompleted, wordList);
   }
-
 
   @Transactional
   public void increaseStudyCount(Long wordId, Long studentId) {

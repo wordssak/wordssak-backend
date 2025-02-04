@@ -3,11 +3,82 @@ package com.mhsk.wordssak.common.config;
 import com.mhsk.wordssak.word.entity.Word;
 import org.springframework.stereotype.Component;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class DefaultWordConfig {
+
+    private static final Map<Integer, String> GRADE_3_TITLES = Stream.of(
+            new AbstractMap.SimpleEntry<>(1, "Hello!"),
+            new AbstractMap.SimpleEntry<>(2, "Oh, It's a Ball!"),
+            new AbstractMap.SimpleEntry<>(3, "Sit Down, Please"),
+            new AbstractMap.SimpleEntry<>(4, "How Many Apples?"),
+            new AbstractMap.SimpleEntry<>(5, "Do You Have a Pencil?"),
+            new AbstractMap.SimpleEntry<>(6, "What Color Is It?"),
+            new AbstractMap.SimpleEntry<>(7, "I Like Chicken"),
+            new AbstractMap.SimpleEntry<>(8, "It's Very Tall!"),
+            new AbstractMap.SimpleEntry<>(9, "I Can Swim"),
+            new AbstractMap.SimpleEntry<>(10, "She's My Mom"),
+            new AbstractMap.SimpleEntry<>(11, "Look! It's Snowing")
+    ).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+
+    private static final Map<Integer, String> GRADE_4_TITLES = Stream.of(
+            new AbstractMap.SimpleEntry<>(1, "My Name Is Eric"),
+            new AbstractMap.SimpleEntry<>(2, "Let's Play Soccer"),
+            new AbstractMap.SimpleEntry<>(3, "How Do You Feel?"),
+            new AbstractMap.SimpleEntry<>(4, "Put the Bottle Here"),
+            new AbstractMap.SimpleEntry<>(5, "Where is My Cap?"),
+            new AbstractMap.SimpleEntry<>(6, "What Time is It?"),
+            new AbstractMap.SimpleEntry<>(7, "This is My Watch"),
+            new AbstractMap.SimpleEntry<>(8, "I Want to Be a Pilot"),
+            new AbstractMap.SimpleEntry<>(9, "I'm Busy"),
+            new AbstractMap.SimpleEntry<>(10, "How Much is This?"),
+            new AbstractMap.SimpleEntry<>(11, "I Wake Up Early")
+    ).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+
+    private static final Map<Integer, String> GRADE_5_TITLES = Stream.of(
+            new AbstractMap.SimpleEntry<>(1, "Where Are You From?"),
+            new AbstractMap.SimpleEntry<>(2, "What Do You Do on Weekends?"),
+            new AbstractMap.SimpleEntry<>(3, "May I Use Your Phone?"),
+            new AbstractMap.SimpleEntry<>(4, "Whose Socks Are These?"),
+            new AbstractMap.SimpleEntry<>(5, "May I Take Your Order?"),
+            new AbstractMap.SimpleEntry<>(6, "What Will You Do This Summer?"),
+            new AbstractMap.SimpleEntry<>(7, "What Did You Do Last Weekend?"),
+            new AbstractMap.SimpleEntry<>(8, "How Much Are These Jeans?"),
+            new AbstractMap.SimpleEntry<>(9, "What's Your Favorite Subject?"),
+            new AbstractMap.SimpleEntry<>(10, "There Is a Sofa in the Living Room"),
+            new AbstractMap.SimpleEntry<>(11, "What Do You Want to Be?")
+    ).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+
+    private static final Map<Integer, String> GRADE_6_TITLES = Stream.of(
+            new AbstractMap.SimpleEntry<>(1, "How Do You Spell Your Name?"),
+            new AbstractMap.SimpleEntry<>(2, "What's the Matter?"),
+            new AbstractMap.SimpleEntry<>(3, "When is the School Festival?"),
+            new AbstractMap.SimpleEntry<>(4, "Go Straight and Turn Left"),
+            new AbstractMap.SimpleEntry<>(5, "What Are You Going to Do Tomorrow?"),
+            new AbstractMap.SimpleEntry<>(6, "She Has Short Curly Hair"),
+            new AbstractMap.SimpleEntry<>(7, "How Often Do You Exercise?"),
+            new AbstractMap.SimpleEntry<>(8, "Who is Stronger?"),
+            new AbstractMap.SimpleEntry<>(9, "What Do You Think About the Movie?"),
+            new AbstractMap.SimpleEntry<>(10, "Who Invented the Light Bulb?"),
+            new AbstractMap.SimpleEntry<>(11, "Let's Save Energy!")
+    ).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+
+    public String getDefaultTitle(Integer grade, Integer unit) {
+      return switch (grade) {
+        case 3 -> GRADE_3_TITLES.getOrDefault(unit, "Default Title");
+        case 4 -> GRADE_4_TITLES.getOrDefault(unit, "Default Title");
+        case 5 -> GRADE_5_TITLES.getOrDefault(unit, "Default Title");
+        case 6 -> GRADE_6_TITLES.getOrDefault(unit, "Default Title");
+        default -> "Default Title";
+      };
+    }
+
   public List<Word> getDefaultWords(Integer grade, Integer semester, Integer unit) {
     List<Word> defaultWords = new ArrayList<>();
 

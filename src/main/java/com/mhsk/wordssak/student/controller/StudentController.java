@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -19,13 +22,18 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping()
-    public ResponseEntity<Void> signIn(@RequestBody SignInForm signInForm, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInForm signInForm, HttpSession session) {
         String classCode = (String) session.getAttribute("classCode");
-        studentService.login(signInForm, classCode);
+        Long studentId = studentService.login(signInForm, classCode);
 
         session.setAttribute("name", signInForm.getName());
         session.setAttribute("birth", signInForm.getBirth());
+        session.setAttribute("studentId", studentId);
 
-        return ResponseEntity.status(OK).build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("studentId", studentId);
+
+        return ResponseEntity.ok(response);
     }
 }

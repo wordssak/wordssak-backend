@@ -36,13 +36,14 @@ public class ClassroomController {
         return ResponseEntity.status(OK).body(GetClassroomResponse.from(classroom));
     }
 
-    @GetMapping("/list/{teacherId}")
-    public ResponseEntity<List<Classroom>> getClassroomsByTeacher(@PathVariable Long teacherId) {
-        List<Classroom> classrooms = classroomService.getClassroomsByTeacherId(teacherId);
+    @GetMapping("/lis")
+    public ResponseEntity<List<Classroom>> getClassroomsByTeacher(HttpSession session) {
+        String email = (String) session.getAttribute("email");
+        List<Classroom> classrooms = classroomService.getClassroomsByEmail(email);
         return ResponseEntity.ok(classrooms);
     }
 
-    @GetMapping()
+    @GetMapping("/list")
     public ResponseEntity<List<GetClassroomResponse>> getClassrooms(HttpSession session) {
         String email = (String) session.getAttribute("email");
         List<Classroom> classrooms = classroomService.getClassroomsByEmail(email);

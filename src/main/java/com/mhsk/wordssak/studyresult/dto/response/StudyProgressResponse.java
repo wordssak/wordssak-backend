@@ -1,12 +1,13 @@
 package com.mhsk.wordssak.studyresult.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class StudyProgressResponse {
-  private String studentName;
+  private String name;
   private int memorizedCount;
   private int totalWords;
   private String satisfaction;

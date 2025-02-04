@@ -29,12 +29,16 @@ public class WordBook extends BaseEntity {
   @Column(nullable = false)
   private Integer unit;
 
+  @Column
+  private String title;
+
   @OneToMany(mappedBy = "wordBook", cascade = CascadeType.ALL)
   private List<Word> words = new ArrayList<>();
 
-  public WordBook(Integer grade, Integer semester, Integer unit) {
+  public WordBook(Integer grade, Integer semester, Integer unit, String title) {
     this.grade = grade;
     this.semester = semester;
     this.unit = unit;
+    this.title = title;
   }
 }

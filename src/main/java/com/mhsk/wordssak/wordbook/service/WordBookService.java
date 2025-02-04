@@ -29,10 +29,13 @@ public class WordBookService {
     Classroom classroom = classroomRepository.findByClassCode(request.getClassCode())
             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 클래스 코드입니다."));
 
+    String title = defaultWordConfig.getDefaultTitle(request.getGrade(), request.getUnit()); // 🔥 자동 제목 설정
+
     WordBook wordBook = new WordBook(
             request.getGrade(),
             request.getSemester(),
-            request.getUnit()
+            request.getUnit(),
+            title
     );
 
     List<Word> defaultWords = defaultWordConfig.getDefaultWords(

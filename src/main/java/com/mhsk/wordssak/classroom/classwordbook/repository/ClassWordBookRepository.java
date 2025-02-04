@@ -9,4 +9,4 @@ public interface ClassWordBookRepository extends JpaRepository<ClassWordBook, Lo
 
   Optional<ClassWordBook> findTopByClassroomClassCodeOrderByCreatedAtDesc(String classCode);
 
-  }
+}

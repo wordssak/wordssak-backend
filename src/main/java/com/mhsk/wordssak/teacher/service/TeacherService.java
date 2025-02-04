@@ -7,7 +7,7 @@ import com.mhsk.wordssak.teacher.entity.Teacher;
 public interface TeacherService {
     void register(SignUpForm signUpForm);
 
-    String login(SignInForm signInForm);
+    Long login(SignInForm signInForm);
 
     Teacher getTeacher(String email);
 }

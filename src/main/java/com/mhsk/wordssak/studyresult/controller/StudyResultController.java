@@ -18,8 +18,8 @@ public class StudyResultController {
   private final StudyResultService studyResultService;
 
   @PostMapping("/submit")
-  public ResponseEntity<String> submitStudyResult(@RequestBody StudyResultRequest request) {
-    studyResultService.saveStudyResult(request);
+  public ResponseEntity<String> submitStudyResult(@RequestBody StudyResultRequest request,@SessionAttribute("studentId") Long studentId) {
+    studyResultService.saveStudyResult(studentId, request);
     return ResponseEntity.ok("학습 결과가 저장되었습니다.");
   }
 

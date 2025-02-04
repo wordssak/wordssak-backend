@@ -31,7 +31,8 @@ public class ClassWordBookServiceImpl implements ClassWordBookService {
         WordBook wordBook = new WordBook(
                 classroom.getGrade(),
                 Integer.parseInt(registerClassWordBookRequest.getSemester()),
-                Integer.parseInt(registerClassWordBookRequest.getUnit())
+                Integer.parseInt(registerClassWordBookRequest.getUnit()),
+                null
         );
         wordBookRepository.save(wordBook);
 
@@ -41,19 +42,22 @@ public class ClassWordBookServiceImpl implements ClassWordBookService {
 
     @Transactional(readOnly = true)
     public ActiveStatusResponse getActiveStatusByClassCode(String classCode) {
-        ClassWordBook classWordBook = classWordBookRepository
+        return classWordBookRepository
                 .findTopByClassroomClassCodeOrderByCreatedAtDesc(classCode)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 클래스 코드입니다."));
-        return new ActiveStatusResponse(classWordBook.isActiveStatus());
+                .map(classWordBook -> new ActiveStatusResponse(classWordBook.isActiveStatus()))
+                .orElse(new ActiveStatusResponse(false));
     }
 
     @Transactional
     public ActiveStatusResponse toggleActiveStatus(String classCode) {
         ClassWordBook classWordBook = classWordBookRepository.findTopByClassroomClassCodeOrderByCreatedAtDesc(classCode)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 클래스 코드입니다."));
+
         boolean newStatus = !classWordBook.isActiveStatus();
         classWordBook.setActiveStatus(newStatus);
         classWordBookRepository.save(classWordBook);
+
         return new ActiveStatusResponse(newStatus);
     }
+
 }

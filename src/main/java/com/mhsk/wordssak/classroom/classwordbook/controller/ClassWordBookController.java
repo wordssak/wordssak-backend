@@ -23,9 +23,9 @@ public class ClassWordBookController {
         return ResponseEntity.status(CREATED).build();
     }
 
-    @GetMapping("/status/{classCode}")
-    public ActiveStatusResponse getActiveStatus(@PathVariable String classCode) {
-        return classWordBookService.getActiveStatusByClassCode(classCode);
+    @GetMapping("/status/{selectedClassCode}")
+    public ActiveStatusResponse getActiveStatus(@PathVariable String selectedClassCode) {
+        return classWordBookService.getActiveStatusByClassCode(selectedClassCode);
     }
 
     @PostMapping("/toggle/{classCode}")
