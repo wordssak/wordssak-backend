@@ -107,4 +107,19 @@ public interface ProgressRepository extends JpaRepository<Word, Long> {
   @Query("SELECT wb.grade, wb.semester, wb.title FROM WordBook wb WHERE wb.id = :wordBookId")
   Optional<Object[]> findWordBookInfoById(@Param("wordBookId") Long wordBookId);
 
+  @Query("""
+        SELECT COUNT(p.id)
+        FROM Progress p
+        WHERE p.student.id = :studentId 
+        AND p.word.wordBook.id = :wordBookId
+        AND p.studyCount >= 5
+    """)
+  Long countMemorizedWords(@Param("studentId") Long studentId, @Param("wordBookId") Long wordBookId);
+
+  @Query("""
+        SELECT COUNT(w.id)
+        FROM Word w
+        WHERE w.wordBook.id = :wordBookId
+    """)
+  Long countTotalWords(@Param("wordBookId") Long wordBookId);
 }

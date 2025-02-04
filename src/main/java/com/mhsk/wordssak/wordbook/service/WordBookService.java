@@ -5,6 +5,7 @@ import com.mhsk.wordssak.classroom.classwordbook.repository.ClassWordBookReposit
 import com.mhsk.wordssak.classroom.entity.Classroom;
 import com.mhsk.wordssak.classroom.repository.ClassRepository;
 import com.mhsk.wordssak.common.config.DefaultWordConfig;
+import com.mhsk.wordssak.studyresult.dto.response.LatestWordBookResponse;
 import com.mhsk.wordssak.wordbook.dto.request.EnrollWordBookRequest;
 import com.mhsk.wordssak.word.entity.Word;
 import com.mhsk.wordssak.wordbook.entity.WordBook;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -69,4 +71,9 @@ public class WordBookService {
 
     return savedWordBook;
   }
+
+  public Optional<LatestWordBookResponse> getLatestWordBookByClassroomId(Long classroomId) {
+    return classWordBookRepository.findLatestWordBookByClassroomId(classroomId);
+  }
+
 }

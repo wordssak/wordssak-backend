@@ -20,6 +20,7 @@ public class Progress extends BaseEntity {
   @JoinColumn(name = "word_id")
   private Word word;
 
+  @Column(name = "study_count")
   private Integer studyCount;
 
 }

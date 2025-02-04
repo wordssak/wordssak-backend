@@ -46,7 +46,7 @@ public class StudyResultService {
     StudyResult studyResult = new StudyResult();
     studyResult.setWordBook(wordBookRepository.getReferenceById(latestWordBookId));
     studyResult.setStudent(studentRepository.getReferenceById(studentId));
-    studyResult.setMemorizedCount(5);
+    studyResult.setMemorizedCount(request.getMemorizedCount());
     studyResult.setNotMemorizedCount(request.getNotMemorizedCount());
     studyResult.setSatisfaction(StudyResult.Satisfaction.valueOf(request.getSatisfaction()));
     studyResult.setIsCompleted(true);
@@ -74,24 +74,19 @@ public class StudyResultService {
 
     List<Student> students = studentRepository.findByClassroomId(classroomId);
 
-    // 3. 최근 비활성 단어장 ID 가져오기
     Long latestInactiveWordBookId = progressRepository.findLatestInactiveWordBookIdByClassroomId(classroomId);
     if (latestInactiveWordBookId == null) {
       throw new IllegalArgumentException("최근 비활성화된 단어장이 없습니다.");
     }
 
-    // 4. 학생별 학습 진행도 조회
     List<StudyProgressResponse> progressResponses = new ArrayList<>();
     for (Student student : students) {
-      // 5. 학생의 최근 단어장에 대한 만족도 조사 결과 가져오기
       Optional<StudyResult> studyResult = studyResultRepository.findByStudentIdAndWordBookId(student.getId(), latestInactiveWordBookId);
 
-      // 6. 만족도 결과 설정
       String satisfaction = studyResult.map(sr -> sr.getSatisfaction().name()).orElse("transparent");
       int memorizedCount = studyResult.map(StudyResult::getMemorizedCount).orElse(0);
       int totalWords = progressRepository.countTotalWordsByWordBookId(latestInactiveWordBookId);
 
-      // 7. 결과 리스트 추가
       progressResponses.add(new StudyProgressResponse(student.getName(), memorizedCount, totalWords, satisfaction));
     }
 

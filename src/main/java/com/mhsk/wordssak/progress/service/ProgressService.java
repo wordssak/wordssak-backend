@@ -2,6 +2,7 @@ package com.mhsk.wordssak.progress.service;
 
 import com.mhsk.wordssak.progress.repository.ProgressRepository;
 import com.mhsk.wordssak.progress.response.WordProgressResponse;
+import com.mhsk.wordssak.progress.response.WordProgressResponseWithCount;
 import com.mhsk.wordssak.progress.response.WordProgressResponseWithStatus;
 import com.mhsk.wordssak.studyresult.repository.StudyResultRepository;
 import jakarta.transaction.Transactional;
@@ -38,7 +39,6 @@ public class ProgressService {
             latestInactiveWordBookId.equals(lastSubmittedWordBookId) &&
             studyResultRepository.isSatisfactionCompletedForWordBook(studentId, latestInactiveWordBookId);
 
-    // 단어 학습 리스트 조회
     List<WordProgressResponse> wordList = activeStatus
             ? progressRepository.findLatestWordProgressByStudentIdWithActiveStatus(studentId)
             .stream()
@@ -58,5 +58,21 @@ public class ProgressService {
   @Transactional
   public void increaseStudyCount(Long wordId, Long studentId) {
     progressRepository.increaseStudyCount(wordId, studentId);
+  }
+
+  public WordProgressResponseWithCount getMemorizedCountByStudentId(Long studentId) {
+    Long wordBookId = progressRepository.findLatestWordBookIdByStudentId(studentId);
+
+    if (wordBookId == null) {
+      return new WordProgressResponseWithCount(0L, 0L, null);
+    }
+
+    Long totalWords = progressRepository.countTotalWords(wordBookId);
+
+    Long memorizedCount = progressRepository.countMemorizedWords(studentId, wordBookId);
+
+    Long notMemorizedCount = totalWords - memorizedCount;
+
+    return new WordProgressResponseWithCount(memorizedCount, notMemorizedCount, wordBookId);
   }
 }

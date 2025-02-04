@@ -1,5 +1,6 @@
 package com.mhsk.wordssak.progress.controller;
 
+import com.mhsk.wordssak.progress.response.WordProgressResponseWithCount;
 import com.mhsk.wordssak.progress.response.WordProgressResponseWithStatus;
 import com.mhsk.wordssak.progress.service.ProgressService;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class ProgressController {
           @SessionAttribute("studentId") Long studentId) {
     progressService.increaseStudyCount(wordId, studentId);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/memorized-count")
+  public ResponseEntity<WordProgressResponseWithCount> getMemorizedCountByStudentId(@SessionAttribute("studentId") Long studentId) {
+    WordProgressResponseWithCount response = progressService.getMemorizedCountByStudentId(studentId);
+    return ResponseEntity.ok(response);
   }
 
 }
